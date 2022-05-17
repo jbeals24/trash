@@ -98,7 +98,7 @@ async function init() {
         return User.query();
       },
     },
-
+//
     {
       method: "DELETE",
       path: "/users/{id}",
