@@ -3,9 +3,9 @@ const { hash, compare } = require("bcrypt");
 
 const SALT_ROUNDS = 10;
 
-class Account extends Model {
+class User extends Model {
   static get tableName() {
-    return "account";
+    return "user";
   }
 
   // Encrypt the password before storing it in the database.
@@ -21,4 +21,4 @@ class Account extends Model {
   }
 }
 
-module.exports = Account;
+module.exports = User;

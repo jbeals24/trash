@@ -14,26 +14,33 @@
     <v-btn v-if="!isLoggedIn" text v-bind:to="{ name: 'sign-in' }">
       Sign In
     </v-btn>
+
     <v-btn text v-bind:to="{ name: 'about-us' }">About Us</v-btn>
 
     <v-menu v-if="isLoggedIn" offset-y>
       <template v-slot:activator="{ on }">
         <v-btn text v-on="on">
-          <v-icon dark>mdi-account</v-icon>
-          <span>{{ $store.state.currentAccount.firstName }}</span>
+          <v-icon dark>mdi-user</v-icon>
+          <span>{{ $store.state.currentUser.firstName }}</span>
           <v-icon dark>mdi-menu-down</v-icon>
         </v-btn>
       </template>
 
       <v-list>
-        <v-list-item v-bind:to="{ name: 'accounts' }">
-          <v-list-item-title>Accounts</v-list-item-title>
+        <v-list-item v-bind:to="{ name: 'users' }">
+          <v-list-item-title>Users</v-list-item-title>
         </v-list-item>
 
         <v-divider></v-divider>
 
         <v-list-item @click="signOut">
           <v-list-item-title>Sign Out</v-list-item-title>
+        </v-list-item>
+
+	<v-divider></v-divider>
+
+	<v-list-item @click="resetPassword">
+          <v-list-item-title>Reset Password</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>

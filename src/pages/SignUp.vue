@@ -118,7 +118,7 @@ export default {
 
       // Post the content of the form to the Hapi server.
       this.$axios
-        .post("/accounts", {
+        .post("/users", {
           firstName: this.newMember.firstName,
           lastName: this.newMember.lastName,
           email: this.newMember.email,
@@ -129,7 +129,7 @@ export default {
           // appropriate dialog.
           if (result.data.ok) {
             this.showDialog("Success", result.data.msge);
-            this.accountCreated = true;
+            this.userCreated = true;
           } else {
             this.showDialog("Sorry", result.data.msge);
           }
@@ -148,7 +148,7 @@ export default {
     // and navigate to the home page.
     hideDialog: function () {
       this.dialogVisible = false;
-      if (this.accountCreated) {
+      if (this.userCreated) {
         // Only navigate away from the sign-up page if we were successful.
         this.$router.push({ name: "home-page" });
       }

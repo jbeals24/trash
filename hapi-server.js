@@ -2,10 +2,10 @@
 const knex = require("knex")({
   client: "pg",
   connection: {
-    host: "localhost", // PostgreSQL server
-    user: "tom", // Your user name
-    password: "", // Your password
-    database: "cos-243-ui-spa", // Your database name
+    host: "pg.cse.taylor.edu", // PostgreSQL server
+    user: "jada_bonnett", // Your user name
+    password: "dizafuqi", // Your password
+    database: "jada_bonnett", // Your database name
   },
 });
 
@@ -14,7 +14,7 @@ const objection = require("objection");
 objection.Model.knex(knex);
 
 // Models
-const Account = require("./models/Account");
+const User = require("./models/User");
 
 // Hapi
 const Joi = require("@hapi/joi"); // Input validation
@@ -44,7 +44,7 @@ async function init() {
   server.route([
     {
       method: "POST",
-      path: "/accounts",
+      path: "/users",
       config: {
         description: "Sign up for an account",
         validate: {
@@ -57,7 +57,7 @@ async function init() {
         },
       },
       handler: async (request, h) => {
-        const existingAccount = await Account.query()
+        const existingAccount = await User.query()
           .where("email", request.payload.email)
           .first();
         if (existingAccount) {
@@ -67,22 +67,22 @@ async function init() {
           };
         }
 
-        const newAccount = await Account.query().insert({
-          first_name: request.payload.firstName,
-          last_name: request.payload.lastName,
+        const newUser = await User.query().insert({
+          firstName: request.payload.firstName,
+          lastName: request.payload.lastName,
           email: request.payload.email,
           password: request.payload.password,
         });
 
-        if (newAccount) {
+        if (newUser) {
           return {
             ok: true,
-            msge: `Created account '${request.payload.email}'`,
+            msge: `Created user '${request.payload.email}'`,
           };
         } else {
           return {
             ok: false,
-            msge: `Couldn't create account with email '${request.payload.email}'`,
+            msge: `Couldn't create user with email '${request.payload.email}'`,
           };
         }
       },
@@ -90,34 +90,34 @@ async function init() {
 
     {
       method: "GET",
-      path: "/accounts",
+      path: "/users",
       config: {
-        description: "Retrieve all accounts",
+        description: "Retrieve all users",
       },
       handler: (request, h) => {
-        return Account.query();
+        return User.query();
       },
     },
 
     {
       method: "DELETE",
-      path: "/accounts/{id}",
+      path: "/users/{id}",
       config: {
-        description: "Delete an account",
+        description: "Delete a user",
       },
       handler: (request, h) => {
-        return Account.query()
+        return User.query()
           .deleteById(request.params.id)
           .then((rowsDeleted) => {
             if (rowsDeleted === 1) {
               return {
                 ok: true,
-                msge: `Deleted account with ID '${request.params.id}'`,
+                msge: `Deleted user with ID '${request.params.id}'`,
               };
             } else {
               return {
                 ok: false,
-                msge: `Couldn't delete account with ID '${request.params.id}'`,
+                msge: `Couldn't delete user with ID '${request.params.id}'`,
               };
             }
           });
@@ -137,21 +137,21 @@ async function init() {
         },
       },
       handler: async (request, h) => {
-        const account = await Account.query()
+        const user = await User.query()
           .where("email", request.payload.email)
           .first();
         if (
-          account &&
-          (await account.verifyPassword(request.payload.password))
+          user &&
+          (await user.verifyPassword(request.payload.password))
         ) {
           return {
             ok: true,
             msge: `Logged in successfully as '${request.payload.email}'`,
             details: {
-              id: account.id,
-              firstName: account.first_name,
-              lastName: account.last_name,
-              email: account.email,
+              id: user.id,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              email: user.email,
             },
           };
         } else {
@@ -161,12 +161,16 @@ async function init() {
           };
         }
       },
-    },
+    }
+    
+
+
   ]);
 
   // Start the server.
   await server.start();
-}
+
+};
 
 // Go!
 init();
